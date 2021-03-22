@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+
+    <title>Weawow Radar!</title>
+    <link rel="stylesheet" href="design/css/common_20200401.css?v3" />
+    <link rel="stylesheet" href="design/css/pc_20200401.css" media="screen and (min-width: 768px)" />
+
+
+</head>
+<body id="body" class="normal">
+
+    <div id="display">
+        <canvas id="fastoverlay"></canvas>
+        <canvas id="animation" class="fill-screen"></canvas>
+        <canvas id="map" class="fill-screen"></canvas>
+        <svg id="places" class="fill-screen"></svg>
+    </div>
+
+<div id="radar-type"></div>
+
+<!--Radar side menu modal/-->
+<div class="popup-radar-sidemenu hide" id="radar-sidemenu-modal">
+    <div id="radar-side-menu">
+        <ol class="ol-first">
+            <li id="overlay-rain"><span><div class="icon1 icon-rainvolume"></div>Precipitation</span></li>
+            <li><span id="parent-over-wind"><div class="icon1 icon-wind-2"></div>Wind</span>
+                <div id="wrap-over-wind">
+                <ol>
+                    <li id="overlay-wind"><span>Wind</span></li>
+                    <li id="overlay-gust"><span>Wind gust</span></li>
+                </ol>
+                </div>
+            </li>
+            <li><span id="parent-over-temp"><div class="icon1 icon-temperature"></div>Temperature</span>
+                <div id="wrap-over-temp">
+                <ol>
+                    <li id="overlay-temp"><span>Temperature</span></li>
+                    <li id="overlay-feel"><span>Feels like</span></li>
+                    <li id="overlay-tempg"><span>Ground Temperature</span></li>
+                </ol>
+                </div>
+            </li>
+            <li id="overlay-dewPoint"><span><div class="icon1 icon-dew-point"></div>Dew point</span></li>
+            <li id="overlay-humidity"><span><div class="icon1 icon-humidity"></div>Humidity</span></li>
+            <li><span id="parent-over-press"><div class="icon1 icon-pressure"></div>Pressure</span>
+                <div id="wrap-over-press">
+                <ol>
+                    <li id="overlay-pressSea"><span>Pressure from Sea</span></li>
+                    <li id="overlay-pressGround"><span>Pressure from Ground</span></li>
+                </ol>
+                </div>
+            </li>
+            <li><span id="parent-over-clouds"><div class="icon1 icon-clouds"></div>Clouds</span>
+                <div id="wrap-over-clouds">
+                <ol>
+                    <li id="overlay-cloudsTotal"><span>Total Clouds</span></li>
+                    <li id="overlay-cloudsHigh"><span>High Clouds</span></li>
+                    <li id="overlay-cloudsMiddle"><span>Middle Clouds</span></li>
+                    <li id="overlay-cloudsLow"><span>Low Clouds</span></li>
+                </ol>
+                </div>
+            </li>
+            <li id="overlay-snowDepth"><span><div class="icon1 icon-snow"></div>Snow depth</span></li>
+        </ol>
+    </div>
+</div>
+<div class="close-radar-side-menu hide"><div>Close</div></div>
+
+<div class="animation-wrap-a">
+    <div class="animation-timeline-wrap-a">
+        <div id="animation-timeline-wrap-b"></div>
+    </div>
+    <div id="animation-back-wrap-a" class="hide">
+        <div class="animation-back-wrap-b"><div class="animation-button-back"></div></div>
+    </div>
+    <div id="animation-play-wrap-a">
+        <div class="animation-play-wrap-b"><div class="animation-button-play"></div></div>
+    </div>
+</div>
+<!--/Radar side menu modal-->
+<div id="legend-wrap">
+    <div class="legend-wrap-b">
+        <canvas id="legend-bar"></canvas>
+        <div class="legend-value-wrap"></div>
+    </div>
+</div>
+<div id="measure"><div id="model"></div><div class="measure-text"></div><div class="measure-box"></div></div>
+<div id="unitsMenu"></div>
+<div id="marker-detail">
+    <div class="marker-wrap-a left" id="markerB-wrap">
+        <div class="marker-wrap-c">
+            <div class="markerB-circle"></div>
+            <div class="marker-wrap-b">
+                <span class="icon1 icon-wind-2"></span>
+                <span id="markerB-wind-units-mirror" class="thin"></span>
+                <span id="markerB-wind-value" class="bigNumber"></span>
+                <span id="markerB-wind-units" class="thin"></span>
+                <span class="wind-arrow-wrap-a">
+                    <span class="wind-arrow-wrap-b">
+                        <span id="markerB-wind-arrow" class="marker-detail-arrow icon1 icon-wind"></span>
+                    </span>
+                    <span id="markerB-wind-text" class="thin degree-text"></span>
+                </span>
+            </div>
+            <div class="marker-wrap-b second">
+                <span id="markerB-icon"></span>
+                <span id="markerB-value-units-mirror" class="thin"></span>
+                <span id="markerB-value" class="bigNumber"></span>
+                <span id="markerB-value-units" class="thin"></span>
+            </div>
+        </div>
+    </div><div class="marker-wrap-a" id="markerA-wrap">
+        <div class="marker-wrap-c">
+            <div class="markerA-circle"></div>
+            <div class="marker-wrap-b">
+                <span class="icon1 icon-wind-2"></span>
+                <span id="markerA-wind-units-mirror" class="thin"></span>
+                <span id="markerA-wind-value" class="bigNumber"></span>
+                <span id="markerA-wind-units" class="thin"></span>
+                <span class="wind-arrow-wrap-a">
+                    <span class="wind-arrow-wrap-b">
+                        <span id="markerA-wind-arrow" class="marker-detail-arrow icon1 icon-wind"></span>
+                    </span>
+                    <span id="markerA-wind-text" class="thin degree-text"></span>
+                </span>
+            </div>
+            <div class="marker-wrap-b second">
+                <span id="markerA-icon"></span>
+                <span id="markerA-value-units-mirror" class="thin"></span>
+                <span id="markerA-value" class="bigNumber"></span>
+                <span id="markerA-value-units" class="thin"></span>
+            </div>
+        </div>
+    </div>
+    <div class="marker-distance-wrap"></div>
+    <div id="marker-distance-value"></div>
+    <div id="marker-distance-unit"></div>
+    <div id="location-close" class="location-close-wrap"><span></span></div>
+</div>
+<p id="status"></p>
+
+<input type="hidden" id="language" data-text="en">
+<input type="hidden" id="wind-text" data-text="N:NNE:NE:ENE:E:ESE:SE:SSE:S:SSW:SW:WSW:W:WNW:NW:NNW">
+<input type="hidden" id="day-name-text" data-text="Sat 2:Sun 3:Mon 4:Tue 5:Wed 6:Thu 7:Fri 8:Sat 9:Sun 10:Mon 11:Tue 12:Wed 13:Thu 14:Fri 15:Sat 16">
+<input type="hidden" id="day-simple" data-text="2020/05/01:2020/05/02:2020/05/03:2020/05/04:2020/05/05:2020/05/06:2020/05/07:2020/05/08:2020/05/09:2020/05/10:2020/05/11:2020/05/12:2020/05/13:2020/05/14:2020/05/15:2020/05/16">
+<input type="hidden" id="server-time" data-text="1588496349">
+<input type="hidden" id="yesterday-time" data-text="1588377600">
+<input type="hidden" id="call-date" data-text="2020/04/30/03">
+<input type="hidden" id="cache-times" data-rain="2020042918" data-wind="2020042918" data-gust="2020042918" data-temp="" data-feel="" data-tempg="" data-dew="" data-humid="" data-press="" data-presg="" data-cloudt="" data-cloudh="" data-cloudm="" data-cloudl="" data-snowd="">
+
+
+
+    <script src="design/test/js/underscore-min.js" charset="utf-8"></script>
+    <script src="design/test/js/backbone-min.js?v2" charset="utf-8"></script>
+    <script src="design/test/js/pako.js" charset="utf-8"></script>
+    <script src="design/test/js/when.js" charset="utf-8"></script>
+    <script src="design/test/js/d3.v4.js?v3" charset="utf-8"></script>
+    <script src="design/test/js/w_micro.js?v3" charset="utf-8"></script>
+    <script src="design/test/js/w_globes.js?v3" charset="utf-8"></script>
+    <script src="design/test/js/w_products.js?v3" charset="utf-8"></script>
+    <script src="design/test/js/w_earth.js?v3" charset="utf-8"></script>
+
+</body>
+</html>
